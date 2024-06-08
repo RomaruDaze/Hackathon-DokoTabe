@@ -59,7 +59,7 @@ const Maps = () => {
     <RNView
       style={{
         width: "100%",
-        height: 520,
+        height: 470,
       }}
     >
       <MapView style={{ flex: 1, borderRadius: 10 }} region={region}>

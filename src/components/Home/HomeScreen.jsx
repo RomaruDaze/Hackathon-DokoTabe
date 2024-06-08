@@ -1,23 +1,21 @@
-import React from "react";
-import { SafeAreaView, View, StyleSheet } from "react-native";
-import Header from "./header/header";
-import Body from "./body/Body";
-import Footer from "./footer/Footer";
+import React, { Component } from "react";
+import { SafeAreaView, View, Text } from "react-native";
+import styles from "./homescreen.style";
+import Maps from "../Tools/Maps/map";
 
-function HomeScreen() {
-  return (
-    <SafeAreaView>
-      <View>
-        <Header />
-      </View>
-      <View>
-        <Body />
-      </View>
-      <View>
-        <Footer />
-      </View>
-    </SafeAreaView>
-  );
+class HomeScreen extends Component {
+  render() {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.main}>
+          <Text style={styles.title}>Map</Text>
+          <View style={styles.map}>
+            <Maps />
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
 }
 
 export default HomeScreen;

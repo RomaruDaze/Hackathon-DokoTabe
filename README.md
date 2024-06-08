@@ -1,68 +1,66 @@
-# Project Title
+# ドコタベ
 
-A brief description of what this project does and who it's for.
+外食しようと思った時、どこに食べに行っていいか悩んだ時はありませんか？
+また、いいなと思ったお店はあるけどメニューが分からず困ったことはありませんか？
+そんな時はこの"ドコタベ"の出番です！！
 
-## Table of Contents
+ドコタベは近くのお店をマップ上に表示し、選択したお店のメニューを表示します。
+何キロ以内やカテゴリーでの絞り込み機能、お店のお気に入り登録機能もあります。
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Features](#features)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
+## 目次
 
-## Installation
+- [インストール](#インストール)
+- [使用方法](#使用方法)
+- [機能](#機能)
+- [ライセンス](#ライセンス)
+- [外部サービス](#外部サービス)
+- [謝辞](#謝辞)
 
-Instructions on how to install and set up the project.
+## インストール
+
+プロジェクトをインストールしてセットアップする方法。
 
 ```bash
-# Clone the repository
+# リポジトリをクローン
 git clone https://github.com/your-username/your-repository.git
 
-# Navigate to the project directory
+# プロジェクトディレクトリに移動
 cd your-repository
 
-# Install dependencies
+# 依存関係をインストール
 npm install
-# or
+# または
 pip install -r requirements.txt
 ```
 
-## Usage
-
-Examples of how to use the project. Provide code snippets and examples.
+## 使用方法
 
 ```bash
-# Run the application
+# アプリケーションを実行
 npm start
-# or
+# または
 python main.py
 ```
 
-## Features
+## 機能
 
-- Feature 1
-- Feature 2
-- Feature 3
+- マップ上で近くのお店表示
+- お店の絞り込み検索
+- お店のお気に入り登録
 
-## Contributing
 
-Guidelines for contributing to the project.
+## ライセンス
 
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature-branch`)
-3. Make your changes
-4. Commit your changes (`git commit -m 'Add some feature'`)
-5. Push to the branch (`git push origin feature-branch`)
-6. Open a pull request
+このプロジェクトはMIT Licenseの下でライセンスされています。
 
-## License
+## 外部サービス
 
-This project is licensed under the [MIT License](LICENSE).
+- postimg.cc
 
-## Acknowledgments
+## 謝辞
 
-Credits to those who have contributed to the project or inspired it.
+プロジェクトに貢献した、またはインスピレーションを与えた人々への感謝。
 
-- [Person 1](https://github.com/person1)
-- [Project 2](https://github.com/project2)
+- [Roger Marvin](https://github.com/RomaruDaze)
+- [Hiroyuki Nagahashi](https://github.com/nagahashi1016)
+- [Sota Kobayashi](https://github.com/sasadango2)

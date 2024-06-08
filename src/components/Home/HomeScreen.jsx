@@ -7,11 +7,8 @@ class HomeScreen extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.main}>
-          <Text style={styles.title}>Map</Text>
-          <View style={styles.map}>
-            <Maps />
-          </View>
+        <View style={styles.map}>
+          <Maps />
         </View>
       </SafeAreaView>
     );

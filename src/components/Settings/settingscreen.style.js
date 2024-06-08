@@ -1,22 +1,23 @@
 import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     container: {
-        height: 700,
+        flex: 1,
+        justifyContent: 'center',
+        marginTop: "5%",
     },
-    body: {
-        padding: 20,
-    },
+
     card: {
         borderRadius: 10,
-        backgroundColor: "orange",
         padding: 20,
         flexDirection: "row",
         justifyContent: "space-between",
+        marginBottom: 20,
+        alignSelf: 'center',
     },
     profileimage: {
         width: 150,
         height: 150,
-        borderRadius: 100,
+        borderRadius: 75,
         borderWidth: 3,
         borderColor: "white",
     },
@@ -34,8 +35,23 @@ const styles = StyleSheet.create({
     profemail: {
         fontSize: 15,
         alignSelf: "center",
+    },
+    settingsSection: {
+        width: '100%',
+        alignItems: 'center',
+    },
+    settingItem: {
+        backgroundColor: 'rgba(255, 165, 0, 0.5)',
+        padding: 15,
+        borderRadius: 10,
+        marginBottom: 10,
+        width: '90%',
+        alignSelf: 'center',
+    },
+    settingText: {
+        fontSize: 18,
+        alignSelf: 'center',
     }
 })
 
 export default styles;
-

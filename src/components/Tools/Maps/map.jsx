@@ -6,93 +6,99 @@ import {
   View,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Callout } from "react-native-maps";
 import * as Location from "expo-location";
 import styles from "./map.style";
+import { useShops, useMenuItems } from "../../../hooks/HookApi";
+import { Picker } from "@react-native-picker/picker"; // Ensure correct import
+import { useNavigation } from "@react-navigation/native";
 
 const Maps = () => {
+  const navigation = useNavigation();
+  const { shops, loading, error } = useShops();
   const [region, setRegion] = useState({
     latitude: 35.6585805,
     longitude: 139.7454329,
     latitudeDelta: 0.005,
     longitudeDelta: 0.005,
   });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const mapRef = useRef(null); // Create a ref for the MapView
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [range, setRange] = useState("50");
+  const mapRef = useRef(null);
 
   useEffect(() => {
-    let locationSubscription;
-
-    const fetchLocation = async () => {
-      try {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-          setError("Permission to access location was denied");
-          setLoading(false);
-          return;
-        }
-
-        locationSubscription = await Location.watchPositionAsync(
-          {
-            accuracy: Location.Accuracy.High,
-            distanceInterval: 1,
-          },
-          (location) => {
-            setRegion({
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-              latitudeDelta: 0.005,
-              longitudeDelta: 0.005,
-            });
-          }
-        );
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
-
-    fetchLocation();
-
-    return () => {
-      if (locationSubscription) {
-        locationSubscription.remove();
-      }
-    };
-  }, []);
-
-  const resetLocation = async () => {
-    try {
+    const fetchCurrentLocation = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         setError("Permission to access location was denied");
         return;
       }
-      let { coords } = await Location.getCurrentPositionAsync({
+      let location = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.High,
       });
-      setRegion({
-        latitude: coords.latitude,
-        longitude: coords.longitude,
+      const newLocation = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
         latitudeDelta: 0.005,
         longitudeDelta: 0.005,
-      });
+      };
+      setCurrentLocation(newLocation);
+      setRegion(newLocation);
+    };
+
+    fetchCurrentLocation();
+  }, []);
+
+  const resetLocation = async () => {
+    if (currentLocation) {
       mapRef.current.animateToRegion(
         {
-          latitude: coords.latitude,
-          longitude: coords.longitude,
+          ...currentLocation,
           latitudeDelta: 0.005,
           longitudeDelta: 0.005,
         },
         1000
       );
-    } catch (err) {
-      setError(err.message);
     }
   };
+
+  const onRangeChange = (itemValue) => {
+    setRange(itemValue);
+    const zoomLevel = 0.001 + itemValue / 50000;
+    setRegion((prevRegion) => ({
+      ...prevRegion,
+      latitudeDelta: zoomLevel,
+      longitudeDelta: zoomLevel,
+    }));
+  };
+
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371e3;
+    const φ1 = (lat1 * Math.PI) / 180;
+    const φ2 = (lat2 * Math.PI) / 180;
+    const Δφ = ((lat2 - lat1) * Math.PI) / 180;
+    const Δλ = ((lon2 - lon1) * Math.PI) / 180;
+
+    const a =
+      Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+      Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c;
+  };
+
+  const filteredShops = shops.filter((shop) => {
+    if (!currentLocation) return false;
+    const distance = calculateDistance(
+      currentLocation.latitude,
+      currentLocation.longitude,
+      shop.lat,
+      shop.long
+    );
+    return distance <= parseInt(range);
+  });
 
   if (loading) {
     return <ActivityIndicator size="large" />;
@@ -104,59 +110,47 @@ const Maps = () => {
 
   return (
     <RNView style={{ width: "100%", height: "100%" }}>
-      <MapView
-        ref={mapRef}
-        style={styles.mapview}
-        region={region}
-        customMapStyle={[
-          {
-            featureType: "poi.business",
-            stylers: [{ visibility: "off" }]
-          },
-          {
-            featureType: "poi.attractions",
-            stylers: [{ visibility: "off" }]
-          },
-          {
-            featureType: "poi.park",
-            stylers: [{ visibility: "off" }]
-          },
-          {
-            featureType: "poi.place_of_worship",
-            stylers: [{ visibility: "off" }]
-          },
-          {
-            featureType: "poi.school",
-            stylers: [{ visibility: "off" }]
-          },
-          {
-            featureType: "poi.sports_complex",
-            stylers: [{ visibility: "off" }]
-          },
-          {
-            featureType: "poi.medical",
-            stylers: [{ visibility: "off" }]
-          },
-          {
-            featureType: "poi.government",
-            stylers: [{ visibility: "off" }]
-          },
-          {
-            featureType: "transit",
-            elementType: "all",
-            stylers: [{ visibility: "off" }]
-          }
-        ]}
-      >
-        <Marker
-          coordinate={{
-            latitude: region.latitude,
-            longitude: region.longitude,
-          }}
-        >
-          <View style={styles.marker} />
-        </Marker>
+      <MapView ref={mapRef} style={styles.mapview} region={region}>
+        {currentLocation && (
+          <Marker coordinate={currentLocation}>
+            <View style={styles.marker} />
+          </Marker>
+        )}
+        {filteredShops.map((shop) => (
+          <Marker
+            key={shop.shopid}
+            coordinate={{ latitude: shop.lat, longitude: shop.long }}
+            title={shop.shopname}
+          >
+            <Image
+              source={{
+                uri: "https://i.postimg.cc/YSCYYDY4/coffee-shop-store-market-restaurant-24911-11058-jpg.avif",
+              }}
+              style={styles.markershop}
+            />
+            <Callout
+              onPress={() =>
+                navigation.navigate("Menu", { shopid: shop.shopid })
+              }
+              style={styles.callout}
+            >
+              <Text>{shop.shopname}</Text>
+            </Callout>
+          </Marker>
+        ))}
       </MapView>
+      <View style={styles.picker}>
+        <Picker
+          selectedValue={range}
+          style={styles.pickerButton}
+          onValueChange={onRangeChange}
+        >
+          <Picker.Item label="0.5 km" value="500" />
+          <Picker.Item label="1 km" value="1000" />
+          <Picker.Item label="2 km" value="2000" />
+          <Picker.Item label="5 km" value="5000" />
+        </Picker>
+      </View>
       <View style={styles.button}>
         <TouchableOpacity onPress={resetLocation}>
           <Image

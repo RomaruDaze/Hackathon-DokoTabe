@@ -11,6 +11,15 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
+    markershop: {
+        height: 50,
+        width: 50,
+        backgroundColor: 'red',
+        borderRadius: "50%",
+        borderWidth: 4,
+        borderColor: "white",
+    },
+
     mapview: {
         flex: 1
     },
@@ -25,10 +34,29 @@ const styles = StyleSheet.create({
         bottom: 30,
         right: 30,
     },
+    callout: {
+        minWidth: 140,
+        padding: 10,
+        backgroundColor: "white",
+        justifyContent: "center",
+        alignItems: "center",
+    },
     buttonImage: {
         width: 50,
         height: 50,
         borderRadius: 25,
+    },
+    picker: {
+        position: "absolute",
+        left: "50%",
+        top: -50,
+        transform: [{ translateX: -75 }],
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    pickerButton: {
+        height: 150,
+        width: 150,
 
     }
 })

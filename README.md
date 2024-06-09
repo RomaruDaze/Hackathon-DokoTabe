@@ -38,8 +38,6 @@ pip install -r requirements.txt
 ```bash
 # アプリケーションを実行
 npm start
-# または
-python main.py
 ```
 
 ## 機能
